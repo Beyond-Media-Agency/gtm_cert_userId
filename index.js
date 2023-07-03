@@ -7,8 +7,6 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const TOPIC = process.env.TOPIC;
-
 initializeApp({
   credential: cert(process.env.SVC_ACC_FILE),
 });
@@ -45,7 +43,7 @@ functions.http("hash", async (req, res) => {
   if (process.env.SAVE_TO_DB === "TRUE") {
     const pubsub = new PubSub({ projectId: process.env.PROJECT_ID });
 
-    const topic = pubsub.topic(TOPIC);
+    const topic = pubsub.topic(process.env.TOPIC);
 
     const db_payload = {
       email,
