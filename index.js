@@ -3,12 +3,14 @@ const CryptoJS = require("crypto-js");
 const { PubSub } = require("@google-cloud/pubsub");
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const dotenv = require("dotenv");
 
-const FIREBASE_PROJECT = "gtm-cert-test";
-const TOPIC = "projects/bq-test-283619/topics/gtm-cert_save-hash-to-db";
+dotenv.config();
+
+const TOPIC = process.env.TOPIC;
 
 initializeApp({
-  credential: cert("./svc_acc_firebase.json"),
+  credential: cert(process.env.SVC_ACC_FILE),
 });
 
 const db = getFirestore();
@@ -38,17 +40,20 @@ functions.http("hash", async (req, res) => {
     return;
   }
 
-  const cyphertext = encrypt_deterministic(PRIVATE_KEY, email);
+  const cyphertext = encrypt_deterministic(process.env.PRIVATE_KEY, email);
 
-  const pubsub = new PubSub({ projectId: "bq-test-283619" });
-  const topic = pubsub.topic(TOPIC);
+  if (process.env.SAVE_TO_DB === "TRUE") {
+    const pubsub = new PubSub({ projectId: process.env.PROJECT_ID });
 
-  const db_payload = {
-    email,
-    cyphertext,
-  };
+    const topic = pubsub.topic(TOPIC);
 
-  topic.publishMessage({ data: Buffer.from(JSON.stringify(db_payload)) });
+    const db_payload = {
+      email,
+      cyphertext,
+    };
+
+    topic.publishMessage({ data: Buffer.from(JSON.stringify(db_payload)) });
+  }
 
   res.status(200).send(JSON.stringify({ response: cyphertext }));
 });
@@ -71,10 +76,6 @@ functions.cloudEvent("save_to_db", async (event) => {
   return;
 });
 
-// const email_cifrado = CryptoJS.AES.encrypt(email, secret_key).toString();
-
 // Decrypt
 // var bytes = CryptoJS.AES.decrypt(ciphertext, "secret key 123");
 // var originalText = bytes.toString(CryptoJS.enc.Utf8);
-
-// console.log(originalText); // 'my message'
