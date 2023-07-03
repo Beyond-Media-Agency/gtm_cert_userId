@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0",
+    "@google-cloud/pubsub": "^3.7.1",
+    "crypto-js": "^4.1.1",
+    "firebase-admin": "^11.9.0",
+    "googleapis": "^118.0.0"
+  },
+  "scripts": {
+    "hash": "export GOOGLE_APPLICATION_CREDENTIALS='./svc_acc_creds.json'; npx functions-framework --target=hash",
+    "pubsub": "export GOOGLE_APPLICATION_CREDENTIALS='./svc_acc_creds.json'; npx functions-framework --target=save_to_db"
+  }
+}
