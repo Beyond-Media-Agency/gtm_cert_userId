@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google-cloud/bigquery": "^6.2.1",
     "@google-cloud/functions-framework": "^3.0.0",
     "@google-cloud/pubsub": "^3.7.1",
     "crypto-js": "^4.1.1",
@@ -9,6 +10,6 @@
   },
   "scripts": {
     "hash": "export GOOGLE_APPLICATION_CREDENTIALS='./svc_acc_creds.json'; npx functions-framework --target=hash",
-    "pubsub": "export GOOGLE_APPLICATION_CREDENTIALS='./svc_acc_creds.json'; npx functions-framework --target=save_to_db"
+    "decrypt": "export GOOGLE_APPLICATION_CREDENTIALS='./svc_acc_creds.json'; npx functions-framework --target=decrypt"
   }
 }
